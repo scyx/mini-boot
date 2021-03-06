@@ -1,5 +1,7 @@
 package boot.core;
 
+import boot.httpServer.HttpServer;
+
 public class ApplicationContext {
     public static final ApplicationContext APPLICATION_CONTEXT = new ApplicationContext();
 
@@ -9,5 +11,10 @@ public class ApplicationContext {
 
     public void run (Class<?> applicationClass) {
 
+    }
+
+    public void callRunners() {
+        HttpServer httpServer = new HttpServer();
+//        httpServer.start();
     }
 }
