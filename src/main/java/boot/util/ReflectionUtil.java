@@ -1,6 +1,6 @@
 package boot.util;
 
-import boot.annotation.mvc.RestController;
+import boot.annotation.ioc.Component;
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
@@ -12,5 +12,19 @@ public class ReflectionUtil {
         Reflections reflections = new Reflections(packageName,new TypeAnnotationsScanner());
         Set<Class<?>> set = reflections.getTypesAnnotatedWith(c,true);
         return set;
+    }
+
+    public static String getBeanName(Class<?> clazz) {
+        Component component = clazz.getAnnotation(Component.class);
+        String beanName = component != null && !"".equals(component.value()) ? component.value() : clazz.getName();
+        return beanName;
+    }
+
+    public static Object newInstance(Class<?> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch(InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(e.getMessage(),e);
+        }
     }
 }

@@ -12,8 +12,6 @@ public class MiniBootApplication {
     public static void main(String[] args) {
         ApplicationContext applicationContext = ApplicationContext.getContext();
         applicationContext.run(MiniBootApplication.class);
-        int[][] arr = {{10,5,0},{15,2,1},{25,1,1},{30,4,0}};
-        System.out.println(getNumberOfBacklogOrders(arr));
     }
 
 
@@ -21,6 +19,7 @@ public class MiniBootApplication {
         PriorityQueue<int[]> sQueue = new PriorityQueue<>();
 
         PriorityQueue<int[]> bQueue = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
             public int compare(int[] a, int[] b) {
                 return b[0] - a[0];
             }
