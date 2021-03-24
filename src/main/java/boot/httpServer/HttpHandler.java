@@ -1,16 +1,11 @@
 package boot.httpServer;
 
-import boot.httpHandlerFactory.HttpHandlerFactory;
-import boot.httpHandlerFactory.IHttpHandler;
+import boot.httpHandler.HttpHandlerFactory;
+import boot.httpHandler.IHttpHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.util.AsciiString;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
 
 
 public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {

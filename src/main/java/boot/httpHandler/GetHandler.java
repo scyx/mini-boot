@@ -1,21 +1,21 @@
-package boot.httpHandlerFactory;
+package boot.httpHandler;
 
 import boot.core.ioc.BeansFactory;
-import boot.core.store.urlRoutes;
+import boot.core.store.UrlAndMethodMapping;
 import boot.util.ReflectionUtil;
+import boot.util.UrlUtil;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import jdk.nashorn.api.scripting.URLReader;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
 
 /**
- * @author dell
+ * @author cyx
  */
+@Slf4j
 public class GetHandler implements IHttpHandler {
 
     ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -23,13 +23,17 @@ public class GetHandler implements IHttpHandler {
     @Override
     public FullHttpResponse handle(FullHttpRequest httpRequest) {
         String url = httpRequest.uri();
-        System.out.println(url);
-        Map<String,Method> map = urlRoutes.getMapByHttpMethod(httpRequest.method());
+        log.info("request originUrl is {}",url);
+        String path = UrlUtil.getRequestPath(url);
+        Map<String,Method> map = UrlAndMethodMapping.getMapByHttpMethod(httpRequest.method());
         System.out.println(map.toString());
-        if (!map.containsKey(url)) {
-            throw new RuntimeException("url not Exist");
+//        if (!map.containsKey(url)) {
+//            throw new RuntimeException("url not Exist");
+//        }
+        Method method = map.get(path);
+        if (method == null) {
+            return responseBuilder.buildeNoMethodResponse();
         }
-        Method method = map.get(url);
         String beanName = ReflectionUtil.getBeanName(method.getDeclaringClass());
         Object obj = BeansFactory.BEANS.get(beanName);
         return responseBuilder.buildeSuccessfulResponse(method,obj);

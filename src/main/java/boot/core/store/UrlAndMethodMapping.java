@@ -8,9 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author dell
+ * @author cyx
  */
-public class urlRoutes {
+public class UrlAndMethodMapping {
+
     public static Map<String, Method> GET_MAP = new HashMap<>(128);
     public static Map<String, Method> POST_MAP = new HashMap<>(128);
     public static Map<String, Method> DELETE_MAP = new HashMap<>(128);
@@ -24,5 +25,13 @@ public class urlRoutes {
             return POST_MAP;
         }
         return null;
+    }
+
+    public static void loadMapping(String url,HttpMethod httpMethod, Method method) {
+        Map<String,Method> map = getMapByHttpMethod(httpMethod);
+        if (map.containsKey(url)) {
+            throw new IllegalArgumentException("url" + url + "already Exist");
+        }
+        map.put(url,method);
     }
 }

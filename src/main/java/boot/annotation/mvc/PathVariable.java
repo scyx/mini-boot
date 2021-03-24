@@ -2,13 +2,16 @@ package boot.annotation.mvc;
 
 import java.lang.annotation.*;
 
-
 /**
  * @author cyx
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RestController {
+public @interface PathVariable {
+
+    /** The URI template variable to bind to. */
     String value() default "";
+
+    boolean required() default true;
 }

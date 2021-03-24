@@ -1,6 +1,5 @@
-package boot.httpHandlerFactory;
+package boot.httpHandler;
 
-import boot.httpServer.HttpHandler;
 import io.netty.handler.codec.http.HttpMethod;
 
 import java.util.Map;

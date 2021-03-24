@@ -1,13 +1,14 @@
 package boot.core;
 
 import boot.annotation.mvc.GetMapping;
-import boot.annotation.start.ComponentScan;
+import boot.annotation.mvc.PostMapping;
 import boot.annotation.mvc.RestController;
-import boot.core.store.ComponentStore;
-import boot.core.store.urlRoutes;
+import boot.annotation.start.ComponentScan;
 import boot.core.ioc.BeansFactory;
+import boot.core.store.ComponentStore;
+import boot.core.store.UrlAndMethodMapping;
 import boot.httpServer.HttpServer;
-import boot.util.ReflectionUtil;
+import io.netty.handler.codec.http.HttpMethod;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -45,17 +46,23 @@ public class ApplicationContext {
     private void loadRouteMethod() {
         Set<Class<?>> set = ComponentStore.CLASS_MAP.get(RestController.class);
         for (Iterator<Class<?>> iter = set.iterator(); iter.hasNext(); ) {
-            Class<?> it = iter.next();
-            saveUrlAndMethod(it);
+            Class<?> clazz = iter.next();
+            saveUrlAndMethod(clazz);
         }
     }
 
     public void saveUrlAndMethod(Class<?> clazz) {
         Method[] methods = clazz.getDeclaredMethods();
+        String baseUrl = clazz.getAnnotation(RestController.class).value();
         for (int i = 0; i < methods.length; i++) {
             GetMapping getMapping = methods[i].getAnnotation(GetMapping.class);
-            String value = getMapping.value();
-            urlRoutes.GET_MAP.put(value,methods[i]);
+            if (getMapping != null) {
+                UrlAndMethodMapping.loadMapping(baseUrl + getMapping.value(), HttpMethod.GET, methods[i]);
+            }
+            PostMapping postMapping = methods[i].getAnnotation(PostMapping.class);
+            if (postMapping != null) {
+                UrlAndMethodMapping.loadMapping(baseUrl + postMapping.value(), HttpMethod.POST, methods[i]);
+            }
         }
     }
 
