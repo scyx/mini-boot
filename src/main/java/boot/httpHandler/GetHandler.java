@@ -1,6 +1,7 @@
 package boot.httpHandler;
 
 import boot.core.ioc.BeansFactory;
+import boot.core.store.HandlerMethod;
 import boot.core.store.UrlAndMethodMapping;
 import boot.util.ReflectionUtil;
 import boot.util.UrlUtil;
@@ -9,6 +10,8 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,17 +28,18 @@ public class GetHandler implements IHttpHandler {
         String url = httpRequest.uri();
         log.info("request originUrl is {}",url);
         String path = UrlUtil.getRequestPath(url);
-        Map<String,Method> map = UrlAndMethodMapping.getMapByHttpMethod(httpRequest.method());
-        System.out.println(map.toString());
+        log.info("request path is {}",path);
+
+        HandlerMethod handlerMethod = new HandlerMethod();
+        handlerMethod.init(url,httpRequest.method());
+
+        Map<String,String> paramtersMap = UrlUtil.getParamters(url);
+        handlerMethod.setRequestParamsMap(paramtersMap);
+//        List<Object> paramtersList = new ArrayList<>();
 //        if (!map.containsKey(url)) {
 //            throw new RuntimeException("url not Exist");
 //        }
-        Method method = map.get(path);
-        if (method == null) {
-            return responseBuilder.buildeNoMethodResponse();
-        }
-        String beanName = ReflectionUtil.getBeanName(method.getDeclaringClass());
-        Object obj = BeansFactory.BEANS.get(beanName);
-        return responseBuilder.buildeSuccessfulResponse(method,obj);
+
+        return responseBuilder.buildeSuccessfulResponse(handlerMethod);
     }
 }

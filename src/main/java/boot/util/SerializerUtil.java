@@ -15,7 +15,12 @@ public class SerializerUtil {
             bytes = objectMapper.writeValueAsBytes(object);
         } catch (Exception e) {
             e.printStackTrace();
+
         }
         return bytes;
+    }
+
+    public static Object convert(Class<?> type, String s) {
+        return objectMapper.convertValue(s,type);
     }
 }

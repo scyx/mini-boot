@@ -10,8 +10,14 @@ import boot.annotation.mvc.RestController;
 @RestController(value = "")
 public class exampleController {
 
-    @GetMapping(value = "/getString/{id}")
-    public String getTest(@PathVariable String id) {
-        return "123";
+    @GetMapping(value = "/getId/{id}/{name}")
+    public String getId(@PathVariable String id,
+                        @PathVariable String name) {
+        return "id:" + id + "name:" + name;
+    }
+
+    @GetMapping(value = "/getName/{name}")
+    public String getName(@PathVariable("name") String name) {
+        return name;
     }
 }

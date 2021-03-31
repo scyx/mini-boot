@@ -10,7 +10,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface PathVariable {
 
-    /** The URI template variable to bind to. */
     String value() default "";
 
     boolean required() default true;

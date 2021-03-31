@@ -36,7 +36,7 @@ public class ApplicationContext {
 
         loadRouteMethod();
 
-        callRunners();
+        startServer();
     }
 
     private void loadBeans() {
@@ -81,7 +81,7 @@ public class ApplicationContext {
     }
 
 
-    public void callRunners() {
+    public void startServer() {
         HttpServer httpServer = new HttpServer();
         httpServer.run();
     }
