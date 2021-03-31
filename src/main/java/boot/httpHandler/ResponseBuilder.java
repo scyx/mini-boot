@@ -6,10 +6,12 @@ import boot.httpHandler.resolver.ParamterResolver;
 import boot.httpHandler.resolver.ParamterResolverFactory;
 import boot.util.ReflectionUtil;
 import boot.util.SerializerUtil;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.util.AsciiString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -25,6 +27,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @author cyx
  *
  */
+@Slf4j
 public class ResponseBuilder {
 
     private static final AsciiString CONNECTION = AsciiString.cached("Connection");
@@ -67,6 +70,13 @@ public class ResponseBuilder {
         byte[] content = "no mapping method".getBytes(StandardCharsets.UTF_8);
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(content));
         addHeader(response);
+        return response;
+    }
+
+    public FullHttpResponse test(byte[] bytes) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(bytes));
+        addHeader(response);
+        log.info(response.toString());
         return response;
     }
 }

@@ -56,7 +56,6 @@
             <type>jar</type>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -64,15 +63,6 @@
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
-
-
-
-
-
-
-
-
-
     </dependencies>
 
     <build>

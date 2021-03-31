@@ -1,5 +1,6 @@
 package boot.core.store;
 
+import boot.util.UrlUtil;
 import io.netty.handler.codec.http.HttpMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,14 +39,24 @@ public class HandlerMethod {
      */
     private String body;
 
-    public void init(String url, HttpMethod httpMethod) {
+    /**
+     *
+     * @param url 请求的路径
+     * @param path 不包括RequestParams的路径
+     * @param httpMethod http方法
+     */
+    public void init(String url,String path, HttpMethod httpMethod) {
         Map<String, String> urlMap = UrlAndMethodMapping.getUrlMapByHttpMethod(httpMethod);
         Map<String, Method> methodMap = UrlAndMethodMapping.getMethodMapByHttpMethod(httpMethod);
+
+        Map<String,String> paramtersMap = UrlUtil.getParamters(url);
+        setRequestParamsMap(paramtersMap);
+
         for (Map.Entry<String, String> entry : urlMap.entrySet()) {
             Pattern pattern = Pattern.compile(entry.getKey());
-            if (pattern.matcher(url).find()) {
+            if (pattern.matcher(path).find()) {
                 setMethod(methodMap.get(entry.getKey()));
-                buildPathVariblesMap(url, entry.getValue());
+                buildPathVariblesMap(path, entry.getValue());
                 break;
             }
         }
@@ -56,8 +67,8 @@ public class HandlerMethod {
 
     /**
      * xx/{id} -> xx/id
-     * xx/id -> xx/1
-     * xx -> xx  id -> 1
+     * xx/id  xx/1
+     * xx:xx  id:1
      */
     public void buildPathVariblesMap(String path, String origin) {
         Map<String, String> map = new HashMap<>();

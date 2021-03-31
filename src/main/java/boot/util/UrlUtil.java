@@ -1,6 +1,7 @@
 package boot.util;
 
 import io.netty.handler.codec.http.QueryStringDecoder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -11,12 +12,10 @@ import java.util.Map;
 /**
  * @author cyx
  */
+@Slf4j
 public class UrlUtil {
     public static String getRequestPath(String url) {
         QueryStringDecoder queryStringDecoder = new QueryStringDecoder(url, StandardCharsets.UTF_8);
-        System.out.println("toString"+queryStringDecoder.toString());
-        System.out.println("path"+queryStringDecoder.path());
-        System.out.println("params"+getParamters(url).toString());
         return queryStringDecoder.path();
     }
 
@@ -29,7 +28,7 @@ public class UrlUtil {
                 res.put(entry.getKey(),val);
             }
         }
-        System.out.println(url + "'s paramter is " + res.toString());
+        log.info(url + "'s paramter is " + res.toString());
         return res;
     }
 

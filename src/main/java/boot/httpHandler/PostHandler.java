@@ -1,44 +1,33 @@
 package boot.httpHandler;
 
-import boot.core.ioc.BeansFactory;
+
 import boot.core.store.HandlerMethod;
-import boot.core.store.UrlAndMethodMapping;
-import boot.util.ReflectionUtil;
 import boot.util.UrlUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import example.controller.User;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import java.lang.reflect.Parameter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author cyx
  */
 @Slf4j
-public class GetHandler implements IHttpHandler {
-
+public class PostHandler implements IHttpHandler {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     ResponseBuilder responseBuilder = new ResponseBuilder();
 
     @Override
     public FullHttpResponse handle(FullHttpRequest httpRequest) {
-        // 请求的url
+
         String url = httpRequest.uri();
-        log.info("request originUrl is {}",url);
-        // 不包含参数的url
         String path = UrlUtil.getRequestPath(url);
-        log.info("request path is {}",path);
-
         HandlerMethod handlerMethod = new HandlerMethod();
+        handlerMethod.setBody(httpRequest.content().toString(StandardCharsets.UTF_8));
         handlerMethod.init(url,path,httpRequest.method());
-
-//        List<Object> paramtersList = new ArrayList<>();
-//        if (!map.containsKey(url)) {
-//            throw new RuntimeException("url not Exist");
-//        }
 
         return responseBuilder.buildeSuccessfulResponse(handlerMethod);
     }

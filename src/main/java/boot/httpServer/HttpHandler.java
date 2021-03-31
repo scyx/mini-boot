@@ -6,8 +6,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     private static final String FAVICON_ICO = "/favicon.ico";
@@ -17,6 +18,7 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (fullHttpRequest.uri().equals(FAVICON_ICO)) {
             return;
         }
+        log.info(fullHttpRequest.toString());
         IHttpHandler httpHandler = HttpHandlerFactory.getHandlerByHttpMethod(fullHttpRequest.method());
         FullHttpResponse response = httpHandler.handle(fullHttpRequest);
 

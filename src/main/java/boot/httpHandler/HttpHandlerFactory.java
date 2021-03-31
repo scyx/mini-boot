@@ -13,6 +13,8 @@ public class HttpHandlerFactory {
 
     static {
         map.put(HttpMethod.GET,new GetHandler());
+        map.put(HttpMethod.POST,new PostHandler());
+
     }
 
     public static IHttpHandler getHandlerByHttpMethod(HttpMethod httpMethod) {
