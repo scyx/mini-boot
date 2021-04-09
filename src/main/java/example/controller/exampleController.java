@@ -1,6 +1,8 @@
 package example.controller;
 
+import boot.annotation.ioc.Autowired;
 import boot.annotation.mvc.*;
+import example.service.ExampleService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +13,12 @@ import java.util.Map;
 @RestController(value = "")
 public class exampleController {
 
+    @Autowired
+    ExampleService exampleService;
+
     @GetMapping(value = "/getId/{id}")
-    public String getId(@PathVariable String id,
-                        @RequestParam("name") String name,
-                        @RequestParam("age") int age) {
-        return "id:" + id + "name:" + name + "age:" + age;
+    public String getId(@PathVariable int id) {
+        return exampleService.test(id);
     }
 
     @PostMapping(value = "/getName/post/{id}")

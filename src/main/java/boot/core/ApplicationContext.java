@@ -10,8 +10,10 @@ import boot.core.store.UrlAndMethodMapping;
 import boot.httpServer.HttpServer;
 import io.netty.handler.codec.http.HttpMethod;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,7 +38,20 @@ public class ApplicationContext {
 
         loadRouteMethod();
 
+        dependencyInject();
+
         startServer();
+    }
+
+    private void dependencyInject() {
+        Map<String,Object> map = BeansFactory.BEANS;
+        for (Map.Entry<String,Object> entry : map.entrySet()) {
+            Class clazz = entry.getValue().getClass();
+            Field[] fields = clazz.getFields();
+            for (Field field : fields) {
+
+            }
+        }
     }
 
     private void loadBeans() {

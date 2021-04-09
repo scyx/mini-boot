@@ -14,6 +14,13 @@ public class ReflectionUtil {
         return set;
     }
 
+    public static <T> Set<Class<? extends T>> getSubClass(Object[] packageName, Class<T> c) {
+        Reflections reflections = new Reflections(packageName);
+        Set<Class<? extends T>> set = reflections.getSubTypesOf(c);
+        return set;
+    }
+
+
     public static String getBeanName(Class<?> clazz) {
         Component component = clazz.getAnnotation(Component.class);
         String beanName = component != null && !"".equals(component.value()) ? component.value() : clazz.getName();

@@ -22,8 +22,8 @@ public class BeansFactory {
         Set<Class<?>> restControllers = ComponentStore.CLASS_MAP.get(RestController.class);
         Set<Class<?>> components = ComponentStore.CLASS_MAP.get(Component.class);
 
-        log.info("The number of class Annotated with @RestController"  + ":[{}]", restControllers.size());
-        log.info("The number of class Annotated with @Component"  + ":[{}]", components.size());
+        log.info("The number of class Annotated with @RestController " + ": {}", restControllers.size());
+        log.info("The number of class Annotated with @Component " + ": {}", components.size());
 
         for (Class clazz : components) {
             String beanName = ReflectionUtil.getBeanName(clazz);
