@@ -1,20 +1,68 @@
 package example;
 
 import boot.annotation.start.ComponentScan;
-import boot.core.ApplicationContext;
-import boot.core.store.UrlAndMethodMapping;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 
 @ComponentScan(value = {"example"})
 public class MiniBootApplication {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = ApplicationContext.getContext();
-        applicationContext.run(MiniBootApplication.class);
-//        MiniBootApplication miniBootApplication = new MiniBootApplication();
-//        int[] arr = {1,2,3};
+//        ApplicationContext applicationContext = ApplicationContext.getContext();
+//        applicationContext.run(MiniBootApplication.class);
+        MiniBootApplication miniBootApplication = new MiniBootApplication();
+        int[] arr = {0,1,2,3,0};
+        minSideJumps(arr);
     }
+    public static int minSideJumps(int[] ob) {
+        int p = 2;
+        int i = 0, cnt = 0;
+        int[] arr = new int[]{1,2,3};
+        while (i < ob.length - 1) {
+            if (ob[i + 1] != 0) {
+                if (ob[i + 1] != p) {
+                    i++;
+                } else {
+                    cnt++;
+                    int[] tmp = new int[4];
+                    for (int t : arr) {
+                        if (t == p) continue;
+                        int j = i;
+                        while (j < ob.length && ob[j] != t) {
+                            tmp[t]++;
+                            j++;
+                        }
+                    }
+                    int max = 0;
+                    for (int k = 1; k <= 3; k++) {
+                        max = Math.max(max,tmp[k]);
+                    }
+                    int pos = 0;
+                    for (int k = 1; k <= 3; k++) {
+                        if (max == tmp[k]) {
+                            pos = k;
+                        }
+                    }
+                    p = pos;
+                }
+            } else {
+                i++;
+            }
+        }
+        return cnt;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     public static int getNumberOfBacklogOrders(int[][] orders) {

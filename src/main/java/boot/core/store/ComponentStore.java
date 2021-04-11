@@ -1,5 +1,6 @@
 package boot.core.store;
 
+import boot.annotation.aop.Aspect;
 import boot.annotation.ioc.Component;
 import boot.annotation.mvc.RestController;
 import boot.util.ReflectionUtil;
@@ -35,6 +36,11 @@ public class ComponentStore {
     public void scanComponent(String[] packageName) {
         Set<Class<?>> set = reflectionUtil.getSetOfAnnotation(packageName, Component.class);
         CLASS_MAP.put(Component.class, set);
+    }
+
+    public void scanAspect(String[] packageName) {
+        Set<Class<?>> set = reflectionUtil.getSetOfAnnotation(packageName, Aspect.class);
+        CLASS_MAP.put(Aspect.class, set);
     }
 
 }

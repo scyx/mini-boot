@@ -31,7 +31,7 @@ public class ApplicationContext {
     public void run (Class<?> applicationClass) {
         String[] packageName =  getPackageName(applicationClass);
 
-        // 扫描RestController
+        // 扫描RestController Component Aspect
         scanComponent(packageName);
 
         loadBeans();
@@ -93,6 +93,7 @@ public class ApplicationContext {
         ComponentStore componentStore = ComponentStore.getStore();
         componentStore.scanRestController(packageName);
         componentStore.scanComponent(packageName);
+        componentStore.scanAspect(packageName);
     }
 
 

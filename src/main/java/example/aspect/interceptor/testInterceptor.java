@@ -1,19 +1,27 @@
 package example.aspect.interceptor;
 
-import boot.util.ReflectionUtil;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-
-import java.lang.reflect.Method;
+import boot.annotation.aop.After;
+import boot.annotation.aop.Aspect;
+import boot.annotation.aop.Before;
+import boot.annotation.aop.PointCut;
 
 /**
  * @author cyx
  */
-public class testInterceptor implements MethodInterceptor {
+@Aspect
+public class testInterceptor {
 
-    @Override
-    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-        System.out.println("testInterceptor");
-        return method.invoke(obj,args);
+    @PointCut("com.example.service.ExampleService")
+    public void pointcut() {
+
     }
+    @Before
+    public void doBefore() {
+        System.out.println("doBefore");
+    }
+    @After
+    public void doAfter() {
+        System.out.println("doAfter");
+    }
+
 }
