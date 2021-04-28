@@ -45,7 +45,7 @@ public class PatternMatchUtil {
     }
 
     public static void main(String[] args) {
-        String pattern = "com.github.demo.*.*Service*";
+        String pattern = "com.github.demo.*.*Service";
         String str = "com.github.demo.user.userService";
         boolean res = simpleMatch(pattern,str);
         System.out.println(res);

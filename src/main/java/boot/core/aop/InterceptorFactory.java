@@ -1,10 +1,12 @@
 package boot.core.aop;
 
 import boot.annotation.aop.Aspect;
+import boot.annotation.aop.PointCut;
 import boot.core.store.ComponentStore;
 import boot.util.ReflectionUtil;
 
 import java.lang.annotation.Retention;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ import java.util.Set;
  * @author cyx
  */
 public class InterceptorFactory {
-    private static final Set<Interceptor> interceptors = new HashSet<>();
+    public static final Set<Interceptor> interceptors = new HashSet<>();
 
     public static void loadInterceptors(String[] packageName) {
         // 找到有@Aspect注解的类
@@ -21,8 +23,8 @@ public class InterceptorFactory {
         for (Class<?> clazz : set) {
             Object bean = ReflectionUtil.newInstance(clazz);
             // Aspect中有@PointCut @Before @After注解的方法
-            InvocationInterceptor interceptor = new InvocationInterceptor(bean);
-            interceptors.add(interceptor);
+            InvocationInterceptor invocationInterceptor = new InvocationInterceptor(bean);
+            interceptors.add(invocationInterceptor);
         }
     }
 

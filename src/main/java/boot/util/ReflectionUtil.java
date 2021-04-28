@@ -5,6 +5,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Set;
 
 public class ReflectionUtil {
@@ -14,10 +15,17 @@ public class ReflectionUtil {
         return set;
     }
 
-    public static <T> Set<Class<? extends T>> getSubClass(Object[] packageName, Class<T> c) {
-        Reflections reflections = new Reflections(packageName);
-        Set<Class<? extends T>> set = reflections.getSubTypesOf(c);
-        return set;
+    /**
+     * 找到指定包下实现了c的子类
+     * @param packageName
+     * @param c
+     * @param <T>
+     * @return
+     */
+    public static <T> Set<Class<? extends T>> getSubClass(String[] packageName, Class<T> c) {
+        Reflections reflections = new Reflections((Object) packageName);
+        return  reflections.getSubTypesOf(c);
+
     }
 
 
@@ -32,6 +40,24 @@ public class ReflectionUtil {
             return clazz.newInstance();
         } catch(InstantiationException | IllegalAccessException e) {
             throw new IllegalStateException(e.getMessage(),e);
+        }
+    }
+
+
+    public static Object executeTargetMethod(Object targetObject, Method method, Object... args) {
+        try {
+            return method.invoke(targetObject, args);
+        } catch (Throwable t) {
+           t.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void executeTargetMethodNoResult(Object targetObject, Method method, Object... args) {
+        try {
+            method.invoke(targetObject, args);
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 }

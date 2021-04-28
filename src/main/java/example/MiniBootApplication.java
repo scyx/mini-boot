@@ -1,136 +1,52 @@
 package example;
 
 import boot.annotation.start.ComponentScan;
+import boot.core.ApplicationContext;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 
 @ComponentScan(value = {"example"})
 public class MiniBootApplication {
-    public static void main(String[] args) {
-//        ApplicationContext applicationContext = ApplicationContext.getContext();
-//        applicationContext.run(MiniBootApplication.class);
-        MiniBootApplication miniBootApplication = new MiniBootApplication();
-        int[] arr = {0,1,2,3,0};
-        minSideJumps(arr);
-    }
-    public static int minSideJumps(int[] ob) {
-        int p = 2;
-        int i = 0, cnt = 0;
-        int[] arr = new int[]{1,2,3};
-        while (i < ob.length - 1) {
-            if (ob[i + 1] != 0) {
-                if (ob[i + 1] != p) {
-                    i++;
-                } else {
-                    cnt++;
-                    int[] tmp = new int[4];
-                    for (int t : arr) {
-                        if (t == p) continue;
-                        int j = i;
-                        while (j < ob.length && ob[j] != t) {
-                            tmp[t]++;
-                            j++;
-                        }
-                    }
-                    int max = 0;
-                    for (int k = 1; k <= 3; k++) {
-                        max = Math.max(max,tmp[k]);
-                    }
-                    int pos = 0;
-                    for (int k = 1; k <= 3; k++) {
-                        if (max == tmp[k]) {
-                            pos = k;
-                        }
-                    }
-                    p = pos;
-                }
-            } else {
-                i++;
-            }
-        }
-        return cnt;
+    public static void main(String[] args) throws IOException, IllegalAccessException {
+        ApplicationContext applicationContext = ApplicationContext.getContext();
+        applicationContext.run(MiniBootApplication.class);
+//        MiniBootApplication miniBootApplication = new MiniBootApplication();
+//        int[] arr = {0,1,2,3,0};
+//        minSideJumps(arr);
+
+//        Socket socket = null;
+//        try {
+//            ServerSocket serverSocket = new ServerSocket(10086);
+//            socket = serverSocket.accept();
+//            InputStream inputStream =  socket.getInputStream();
+//            OutputStream outputStream = socket.getOutputStream();
+//            byte[] bytes = new byte[1024];
+//            while (true) {
+//                int t = inputStream.read(bytes);
+//                if (t != -1) {
+//                    String res  = "接收到客户端消息： "+new String(bytes,0,t);
+//                    outputStream.write(res.getBytes(StandardCharsets.UTF_8));
+//                    outputStream.flush();
+//                } else {
+//                    break;
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            System.out.println("socket close");
+//            socket.close();
+//        }
+        Scanner scanner = new Scanner(System.in);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    public static int getNumberOfBacklogOrders(int[][] orders) {
-        PriorityQueue<int[]> sQueue = new PriorityQueue<>();
-
-        PriorityQueue<int[]> bQueue = new PriorityQueue<>(new Comparator<int[]>() {
-            @Override
-            public int compare(int[] a, int[] b) {
-                return b[0] - a[0];
-            }
-        });
-
-        for (int[] o : orders) {
-            if (o[2] == 0) { // buy
-                while (!sQueue.isEmpty() && sQueue.peek()[0] <= o[0] && o[1] != 0) {
-                    int[] sell = sQueue.poll();
-                    if (o[1] >= sell[1]) {
-                        o[1] -= sell[1];
-                    } else {
-                        sell[1] -= o[1];
-                        o[1] = 0;
-                        sQueue.add(sell);
-                    }
-                }
-                if (o[1] != 0) {
-                    bQueue.add(o);
-                }
-            } else { // sell
-                while (!bQueue.isEmpty() && bQueue.peek()[0] >= o[0] && o[1] != 0) {
-                    int[] buy = bQueue.poll();
-                    if (o[1] >= buy[1]) {
-                        o[1] -= buy[1];
-                    } else {
-                        buy[1] -= o[1];
-                        o[1] = 0;
-                        bQueue.add(buy);
-                    }
-                }
-                if (o[1] != 0) {
-                    sQueue.add(o);
-                }
-            }
-        }
-        int mod = 1000000009;
-        int res = 0;
-
-        while (!sQueue.isEmpty()) {
-            int[] cur = sQueue.poll();
-            res += (cur[1] % mod);
-            res = res % mod;
-        }
-        while (!bQueue.isEmpty()) {
-            int[] cur = bQueue.poll();
-            res += (cur[1] % mod);
-            res = res % mod;
-        }
-        return res;
-    }
-
-    int[] heap;
-
-    public void init(int capacity) {
-        heap = new int[capacity];
-    }
-
-    public void add(int t) {
-
-    }
 
     public void swap(int[] arr, int i, int j) {
         int t = arr[i];
@@ -174,5 +90,13 @@ public class MiniBootApplication {
             index = (index - 1) / 2;
         }
     }
+
+
+
+
+
+
+
+
 
 }

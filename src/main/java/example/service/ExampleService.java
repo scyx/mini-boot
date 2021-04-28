@@ -1,10 +1,10 @@
 package example.service;
 
+import boot.annotation.ioc.Component;
+
 /**
  * @author cyx
  */
-public class ExampleService {
-    public String test(int id) {
-        return "accept id :" + id;
-    }
+public interface ExampleService {
+    String test(int id);
 }
