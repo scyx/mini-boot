@@ -39,7 +39,7 @@ public class HttpServer {
             Channel ch = b.bind(PORT).sync().channel();
             ch.closeFuture().sync();
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

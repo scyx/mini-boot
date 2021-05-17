@@ -13,6 +13,8 @@ import boot.core.ioc.BeansFactory;
 import boot.core.store.ComponentStore;
 import boot.core.store.UrlAndMethodMapping;
 import boot.httpServer.HttpServer;
+import example.service.A;
+import example.service.B;
 import io.netty.handler.codec.http.HttpMethod;
 
 import java.lang.annotation.Annotation;
@@ -42,10 +44,14 @@ public class ApplicationContext {
         scanComponent(packageName);
         loadBeans();
         loadRouteMethod();
-        InterceptorFactory.loadInterceptors(packageName);
+        loadInterceptors(packageName);
         dependencyInject(packageName);
         aopPostProcess(packageName);
         startServer();
+    }
+
+    private void loadInterceptors(String[] packageName) {
+        InterceptorFactory.loadInterceptors(packageName);
     }
 
     private void aopPostProcess(String[] packageName) {

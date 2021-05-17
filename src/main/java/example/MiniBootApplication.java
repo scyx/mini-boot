@@ -2,6 +2,8 @@ package example;
 
 import boot.annotation.start.ComponentScan;
 import boot.core.ApplicationContext;
+import example.service.A;
+import example.service.B;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,7 @@ public class MiniBootApplication {
     public static void main(String[] args) throws IOException, IllegalAccessException {
         ApplicationContext applicationContext = ApplicationContext.getContext();
         applicationContext.run(MiniBootApplication.class);
+
 //        MiniBootApplication miniBootApplication = new MiniBootApplication();
 //        int[] arr = {0,1,2,3,0};
 //        minSideJumps(arr);
