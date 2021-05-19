@@ -6,9 +6,12 @@ import boot.core.ioc.BeansFactory;
 import example.service.A;
 import example.service.B;
 import example.service.ExampleService;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,10 +24,16 @@ public class exampleController {
     @Autowired
     ExampleService exampleService;
 
-    @GetMapping(value = "/testCircle")
-    public String testA() {
-        A a = (A)BeansFactory.BEANS.get("example.service.A");
-        return a.testA();
+    @GetMapping(value = "/testCircleDependency")
+    public Object testA() {
+        A a = (A)BeansFactory.SINGLETONS.get("example.service.A");
+        B b = (B)BeansFactory.SINGLETONS.get("example.service.B");
+        Map<String,Object> map = new HashMap<>();
+        map.put("a",a.toString());
+        map.put("a.b",a.getB().toString());
+        map.put("b.a",b.getA().toString());
+        map.put("b",b.toString());
+        return map;
     }
 
 

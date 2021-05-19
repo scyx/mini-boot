@@ -2,8 +2,10 @@ package example.service;
 
 import boot.annotation.ioc.Autowired;
 import boot.annotation.ioc.Component;
+import lombok.NoArgsConstructor;
 
 @Component
+@NoArgsConstructor
 public class A {
     @Autowired
     private B b;
@@ -16,11 +18,4 @@ public class A {
         this.b = b;
     }
 
-    public String testB() {
-        return "b.a" + ":" + b.getA();
-    }
-
-    public String testA() {
-        return "b.a" + ":" + b.getA();
-    }
 }

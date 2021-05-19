@@ -1,4 +1,9 @@
-package boot.core.ioc;/**
+package boot.core.ioc;
+
+/**
  * @author cyx
- */public interface ObjectoryFactory {
+ */
+@FunctionalInterface
+public interface ObjectoryFactory<T> {
+    T getObject();
 }

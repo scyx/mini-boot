@@ -37,7 +37,7 @@ public class BeanInitializer {
                 beanName = qualifier == null ? beanName : qualifier.value();
             }
         }
-        Object value = BeansFactory.BEANS.get(beanName);
+        Object value = BeansFactory.SINGLETONS.get(beanName);
         BeanPostProcesser beanPostProcessor = BeanPostProcesser.getProxy(field.getType());
         value = beanPostProcessor.wrap(value);
         field.set(object,value);

@@ -37,7 +37,7 @@ public class ResponseBuilder {
     public FullHttpResponse buildeSuccessfulResponse(HandlerMethod handlerMethod) {
         Method method = handlerMethod.getMethod();
         String beanName = ReflectionUtil.getBeanName(handlerMethod.getMethod().getDeclaringClass());
-        Object obj = BeansFactory.BEANS.get(beanName);
+        Object obj = BeansFactory.SINGLETONS.get(beanName);
         List<Object> params = new ArrayList<>();
         Parameter[] parameters = method.getParameters();
         for (Parameter parameter : parameters) {

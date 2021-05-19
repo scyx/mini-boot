@@ -42,10 +42,10 @@ public class ApplicationContext {
         String[] packageName =  getPackageName(applicationClass);
         // 扫描RestController Component Aspect
         scanComponent(packageName);
-        loadBeans();
+        loadBeans(packageName);
         loadRouteMethod();
         loadInterceptors(packageName);
-        dependencyInject(packageName);
+//        dependencyInject(packageName);
         aopPostProcess(packageName);
         startServer();
     }
@@ -55,15 +55,14 @@ public class ApplicationContext {
     }
 
     private void aopPostProcess(String[] packageName) {
-
-        BeansFactory.BEANS.replaceAll((beanName,object) -> {
+        BeansFactory.SINGLETONS.replaceAll((beanName,object) -> {
             BeanPostProcesser beanPostProcesser = BeanPostProcesser.getProxy(object.getClass());
             return beanPostProcesser.wrap(object);
         });
     }
 
     private void dependencyInject(String[] packageNames) throws IllegalAccessException {
-        Map<String,Object> map = BeansFactory.BEANS;
+        Map<String,Object> map = BeansFactory.SINGLETONS;
         BeanInitializer beanInitializer = new BeanInitializer(packageNames);
         for (Map.Entry<String,Object> entry : map.entrySet()) {
             Object obj = entry.getValue();
@@ -78,8 +77,8 @@ public class ApplicationContext {
     }
 
 
-    private void loadBeans() {
-        beansFactory.loadBeans();
+    private void loadBeans(String[] packageName) throws IllegalAccessException {
+        beansFactory.loadBeans(packageName);
     }
 
     private void loadRouteMethod() {
