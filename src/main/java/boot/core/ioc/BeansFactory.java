@@ -62,7 +62,6 @@ public class BeansFactory {
     }
 
     private void populateBean(String beanName, Object obj) throws IllegalAccessException {
-        EARLY_BEANS.put(beanName,obj);
         for (Field field : obj.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(Autowired.class)) {
                 continue;
@@ -89,22 +88,35 @@ public class BeansFactory {
                 fObj = SINGLETONS.get(fcName);
             } else if (EARLY_BEANS.get(fcName) != null) {
                 fObj = EARLY_BEANS.get(fcName);
+            } else if (SINGLETONFACTORIES.get(fcName) != null) {
+                fObj = SINGLETONFACTORIES.get(fcName).getObject();
+                EARLY_BEANS.put(beanName, obj);
+                SINGLETONFACTORIES.remove(beanName);
             } else {
-                fObj = getBean(fcName,type);
+                fObj = getBean(fcName, type);
             }
-            field.set(obj,fObj);
+            field.set(obj, fObj);
         }
         EARLY_BEANS.remove(beanName);
-        SINGLETONS.put(beanName,obj);
+        obj = postProcessBean(obj);
+        SINGLETONS.put(beanName, obj);
+    }
+
+    private Object postProcessBean(Object obj) {
+        BeanPostProcesser beanPostProcesser = BeanPostProcesser.getProxy(obj.getClass());
+        return beanPostProcesser.wrap(obj);
     }
 
     public Object getEarlyBeanReference(Object object) {
+        log.info("创建{}",object.getClass().getSimpleName());
         Object exposedObject = object;
         BeanPostProcesser beanPostProcesser = BeanPostProcesser.getProxy(exposedObject.getClass());
         return beanPostProcesser.wrap(object);
     }
 
     public void addSingletonFactories(String beanName, ObjectoryFactory<?> objecteFactory) {
-        SINGLETONFACTORIES.put(beanName,objecteFactory);
+        if (!SINGLETONFACTORIES.containsKey(beanName)){
+            SINGLETONFACTORIES.put(beanName, objecteFactory);
+        }
     }
 }

@@ -10,7 +10,7 @@ import boot.core.aop.JoinPoint;
  * @author cyx
  */
 @Aspect
-public class testInterceptor {
+public class ControllerAspect {
 
     @PointCut("example.controller.*Controller")
     public void pointcut() {

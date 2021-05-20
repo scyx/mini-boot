@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_ENCODING;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -64,6 +65,7 @@ public class ResponseBuilder {
     public void addHeader(FullHttpResponse httpResponse) {
         httpResponse.headers().setInt(CONTENT_LENGTH, httpResponse.content().readableBytes());
         httpResponse.headers().set(CONNECTION, KEEP_ALIVE);
+        httpResponse.headers().set(CONTENT_TYPE,"text/html;charset=UTF-8");
     }
 
     public FullHttpResponse buildeNoMethodResponse() {

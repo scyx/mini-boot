@@ -1,6 +1,7 @@
 package example.aspect.interceptor;
 
 import boot.annotation.aop.After;
+import boot.annotation.aop.Aspect;
 import boot.annotation.aop.Before;
 import boot.annotation.aop.PointCut;
 import boot.core.aop.JoinPoint;
@@ -8,18 +9,18 @@ import boot.core.aop.JoinPoint;
 /**
  * @author cyx
  */
-
-public class AnnotationInterceptor {
-    @PointCut("@anootation(boot.annotation.mvc.*Mapping)")
-    public void pointcut() {
+@Aspect
+public class ServiceAspect {
+    @PointCut("example.service.A")
+    public void pointa() {
 
     }
     @Before
     public void doBefore(JoinPoint joinPoint) {
-        System.out.println("before anootation boot.annotation.mvc.RestController");
+        System.out.println("example.service.A doBefore");
     }
     @After
     public void doAfter(JoinPoint joinPoint) {
-        System.out.println("after anootation boot.annotation.mvc.RestController");
+        System.out.println("example.service.A doAfter");
     }
 }

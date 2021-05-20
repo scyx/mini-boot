@@ -1,27 +1,18 @@
 package boot.core;
 
-import boot.annotation.ioc.Autowired;
 import boot.annotation.mvc.GetMapping;
 import boot.annotation.mvc.PostMapping;
 import boot.annotation.mvc.RestController;
 import boot.annotation.start.ComponentScan;
-import boot.core.aop.BeanPostProcesser;
-import boot.core.aop.Interceptor;
 import boot.core.aop.InterceptorFactory;
-import boot.core.ioc.BeanInitializer;
 import boot.core.ioc.BeansFactory;
 import boot.core.store.ComponentStore;
 import boot.core.store.UrlAndMethodMapping;
 import boot.httpServer.HttpServer;
-import example.service.A;
-import example.service.B;
 import io.netty.handler.codec.http.HttpMethod;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -42,11 +33,13 @@ public class ApplicationContext {
         String[] packageName =  getPackageName(applicationClass);
         // 扫描RestController Component Aspect
         scanComponent(packageName);
-        loadBeans(packageName);
-        loadRouteMethod();
+        // 加载@Aspect
         loadInterceptors(packageName);
-//        dependencyInject(packageName);
-        aopPostProcess(packageName);
+        // 加载bean 包括实例化 -> 初始化 -> 属性填充
+        loadBeans(packageName);
+        // 加载方法路由
+        loadRouteMethod();
+        // 启动服务
         startServer();
     }
 
@@ -54,27 +47,20 @@ public class ApplicationContext {
         InterceptorFactory.loadInterceptors(packageName);
     }
 
-    private void aopPostProcess(String[] packageName) {
-        BeansFactory.SINGLETONS.replaceAll((beanName,object) -> {
-            BeanPostProcesser beanPostProcesser = BeanPostProcesser.getProxy(object.getClass());
-            return beanPostProcesser.wrap(object);
-        });
-    }
-
-    private void dependencyInject(String[] packageNames) throws IllegalAccessException {
-        Map<String,Object> map = BeansFactory.SINGLETONS;
-        BeanInitializer beanInitializer = new BeanInitializer(packageNames);
-        for (Map.Entry<String,Object> entry : map.entrySet()) {
-            Object obj = entry.getValue();
-            Class clazz = obj.getClass();
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(Autowired.class)) {
-                    beanInitializer.setValueForField(field,obj);
-                }
-            }
-        }
-    }
+//    private void dependencyInject(String[] packageNames) throws IllegalAccessException {
+//        Map<String,Object> map = BeansFactory.SINGLETONS;
+//        BeanInitializer beanInitializer = new BeanInitializer(packageNames);
+//        for (Map.Entry<String,Object> entry : map.entrySet()) {
+//            Object obj = entry.getValue();
+//            Class clazz = obj.getClass();
+//            Field[] fields = clazz.getDeclaredFields();
+//            for (Field field : fields) {
+//                if (field.isAnnotationPresent(Autowired.class)) {
+//                    beanInitializer.setValueForField(field,obj);
+//                }
+//            }
+//        }
+//    }
 
 
     private void loadBeans(String[] packageName) throws IllegalAccessException {
