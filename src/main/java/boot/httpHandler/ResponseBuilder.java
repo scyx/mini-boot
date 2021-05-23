@@ -35,7 +35,7 @@ public class ResponseBuilder {
     private static final AsciiString KEEP_ALIVE = AsciiString.cached("keep-alive");
     private static final AsciiString CONTENT_TYPE = AsciiString.cached("Content-Type");
 
-    public FullHttpResponse buildeSuccessfulResponse(HandlerMethod handlerMethod) {
+    public FullHttpResponse buildSuccessfulResponse(HandlerMethod handlerMethod) {
         Method method = handlerMethod.getMethod();
         String beanName = ReflectionUtil.getBeanName(handlerMethod.getMethod().getDeclaringClass());
         Object obj = BeansFactory.SINGLETONS.get(beanName);
@@ -43,6 +43,7 @@ public class ResponseBuilder {
         Parameter[] parameters = method.getParameters();
         for (Parameter parameter : parameters) {
             ParamterResolver paramterResolver = ParamterResolverFactory.getParamterResolver(parameter);
+            if (paramterResolver == null) throw new RuntimeException("no such parameterResolver match");
             Object object = paramterResolver.resolve(handlerMethod,parameter);
             params.add(object);
         }
@@ -68,17 +69,10 @@ public class ResponseBuilder {
         httpResponse.headers().set(CONTENT_TYPE,"text/html;charset=UTF-8");
     }
 
-    public FullHttpResponse buildeNoMethodResponse() {
+    public FullHttpResponse buildNoMethodResponse() {
         byte[] content = "no mapping method".getBytes(StandardCharsets.UTF_8);
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(content));
         addHeader(response);
-        return response;
-    }
-
-    public FullHttpResponse test(byte[] bytes) {
-        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(bytes));
-        addHeader(response);
-        log.info(response.toString());
         return response;
     }
 }

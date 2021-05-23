@@ -10,9 +10,9 @@ import java.lang.reflect.Parameter;
  * @author cyx
  */
 public class ParamterResolverFactory {
-    private static ParamterResolver pathVaribleResolver = new PathVaribleResolver();
-    private static ParamterResolver requestParamResolver = new RequestParamResolver();
-    private static ParamterResolver requestBodyResolver = new RequestBodyResolver();
+    private static final ParamterResolver pathVaribleResolver = new PathVaribleResolver();
+    private static final ParamterResolver requestParamResolver = new RequestParamResolver();
+    private static final ParamterResolver requestBodyResolver = new RequestBodyResolver();
 
 
     public static ParamterResolver getParamterResolver(Parameter parameter) {

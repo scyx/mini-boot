@@ -25,7 +25,7 @@ public class BeansFactory {
 
     public static final Map<String, Object> EARLY_BEANS = new HashMap<>(128);
 
-    public static final Map<String, ObjectoryFactory<?>> SINGLETONFACTORIES = new HashMap<>(128);
+    public static final Map<String, ObjectFactory<?>> SINGLETONFACTORIES = new HashMap<>(128);
 
 
     public void loadBeans(String[] packageName) throws IllegalAccessException {
@@ -37,9 +37,6 @@ public class BeansFactory {
         log.info("The number of class Annotated with @Component " + ": {}", components.size());
 
         for (Class<?> clazz : components) {
-//            String beanName = ReflectionUtil.getBeanName(clazz);
-//            Object obj = ReflectionUtil.newInstance(clazz);
-//            EARLY_BEANS.put(beanName, obj);
             String beanName = ReflectionUtil.getBeanName(clazz);
             getBean(beanName,clazz);
         }
@@ -108,15 +105,14 @@ public class BeansFactory {
     }
 
     public Object getEarlyBeanReference(Object object) {
-        log.info("创建{}",object.getClass().getSimpleName());
         Object exposedObject = object;
         BeanPostProcesser beanPostProcesser = BeanPostProcesser.getProxy(exposedObject.getClass());
         return beanPostProcesser.wrap(object);
     }
 
-    public void addSingletonFactories(String beanName, ObjectoryFactory<?> objecteFactory) {
+    public void addSingletonFactories(String beanName, ObjectFactory<?> objectFactory) {
         if (!SINGLETONFACTORIES.containsKey(beanName)){
-            SINGLETONFACTORIES.put(beanName, objecteFactory);
+            SINGLETONFACTORIES.put(beanName, objectFactory);
         }
     }
 }

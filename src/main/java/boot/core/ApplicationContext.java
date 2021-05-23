@@ -21,9 +21,7 @@ import java.util.Set;
 public class ApplicationContext {
     private static final ApplicationContext APPLICATION_CONTEXT = new ApplicationContext();
 
-    private BeansFactory beansFactory = new BeansFactory();
-
-
+    private final BeansFactory beansFactory = new BeansFactory();
 
     public static ApplicationContext getContext() {
         return APPLICATION_CONTEXT;
@@ -47,30 +45,14 @@ public class ApplicationContext {
         InterceptorFactory.loadInterceptors(packageName);
     }
 
-//    private void dependencyInject(String[] packageNames) throws IllegalAccessException {
-//        Map<String,Object> map = BeansFactory.SINGLETONS;
-//        BeanInitializer beanInitializer = new BeanInitializer(packageNames);
-//        for (Map.Entry<String,Object> entry : map.entrySet()) {
-//            Object obj = entry.getValue();
-//            Class clazz = obj.getClass();
-//            Field[] fields = clazz.getDeclaredFields();
-//            for (Field field : fields) {
-//                if (field.isAnnotationPresent(Autowired.class)) {
-//                    beanInitializer.setValueForField(field,obj);
-//                }
-//            }
-//        }
-//    }
-
-
     private void loadBeans(String[] packageName) throws IllegalAccessException {
         beansFactory.loadBeans(packageName);
     }
 
     private void loadRouteMethod() {
         Set<Class<?>> set = ComponentStore.CLASS_MAP.get(RestController.class);
-        for (Iterator<Class<?>> iter = set.iterator(); iter.hasNext(); ) {
-            Class<?> clazz = iter.next();
+        for (Iterator<Class<?>> iterator = set.iterator(); iterator.hasNext();) {
+            Class<?> clazz = iterator.next();
             saveUrlAndMethod(clazz);
         }
     }

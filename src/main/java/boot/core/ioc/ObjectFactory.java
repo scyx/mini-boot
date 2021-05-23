@@ -4,6 +4,6 @@ package boot.core.ioc;
  * @author cyx
  */
 @FunctionalInterface
-public interface ObjectoryFactory<T> {
+public interface ObjectFactory<T> {
     T getObject();
 }
