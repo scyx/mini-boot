@@ -1,27 +1,18 @@
 package boot.core;
 
-import boot.annotation.ioc.Autowired;
 import boot.annotation.mvc.GetMapping;
 import boot.annotation.mvc.PostMapping;
 import boot.annotation.mvc.RestController;
 import boot.annotation.start.ComponentScan;
-import boot.core.aop.BeanPostProcesser;
-import boot.core.aop.Interceptor;
 import boot.core.aop.InterceptorFactory;
-import boot.core.ioc.BeanInitializer;
 import boot.core.ioc.BeansFactory;
 import boot.core.store.ComponentStore;
 import boot.core.store.UrlAndMethodMapping;
 import boot.httpServer.HttpServer;
-import example.service.A;
-import example.service.B;
 import io.netty.handler.codec.http.HttpMethod;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -30,9 +21,7 @@ import java.util.Set;
 public class ApplicationContext {
     private static final ApplicationContext APPLICATION_CONTEXT = new ApplicationContext();
 
-    private BeansFactory beansFactory = new BeansFactory();
-
-
+    private final BeansFactory beansFactory = new BeansFactory();
 
     public static ApplicationContext getContext() {
         return APPLICATION_CONTEXT;
@@ -42,11 +31,13 @@ public class ApplicationContext {
         String[] packageName =  getPackageName(applicationClass);
         // 扫描RestController Component Aspect
         scanComponent(packageName);
-        loadBeans();
-        loadRouteMethod();
+        // 加载@Aspect
         loadInterceptors(packageName);
-        dependencyInject(packageName);
-        aopPostProcess(packageName);
+        // 加载bean 包括实例化 -> 初始化 -> 属性填充
+        loadBeans(packageName);
+        // 加载方法路由
+        loadRouteMethod();
+        // 启动服务
         startServer();
     }
 
@@ -54,38 +45,14 @@ public class ApplicationContext {
         InterceptorFactory.loadInterceptors(packageName);
     }
 
-    private void aopPostProcess(String[] packageName) {
-
-        BeansFactory.BEANS.replaceAll((beanName,object) -> {
-            BeanPostProcesser beanPostProcesser = BeanPostProcesser.getProxy(object.getClass());
-            return beanPostProcesser.wrap(object);
-        });
-    }
-
-    private void dependencyInject(String[] packageNames) throws IllegalAccessException {
-        Map<String,Object> map = BeansFactory.BEANS;
-        BeanInitializer beanInitializer = new BeanInitializer(packageNames);
-        for (Map.Entry<String,Object> entry : map.entrySet()) {
-            Object obj = entry.getValue();
-            Class clazz = obj.getClass();
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(Autowired.class)) {
-                    beanInitializer.setValueForField(field,obj);
-                }
-            }
-        }
-    }
-
-
-    private void loadBeans() {
-        beansFactory.loadBeans();
+    private void loadBeans(String[] packageName) throws IllegalAccessException {
+        beansFactory.loadBeans(packageName);
     }
 
     private void loadRouteMethod() {
         Set<Class<?>> set = ComponentStore.CLASS_MAP.get(RestController.class);
-        for (Iterator<Class<?>> iter = set.iterator(); iter.hasNext(); ) {
-            Class<?> clazz = iter.next();
+        for (Iterator<Class<?>> iterator = set.iterator(); iterator.hasNext();) {
+            Class<?> clazz = iterator.next();
             saveUrlAndMethod(clazz);
         }
     }

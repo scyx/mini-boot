@@ -2,11 +2,12 @@ package example.service;
 
 import boot.annotation.ioc.Autowired;
 import boot.annotation.ioc.Component;
-import lombok.NoArgsConstructor;
 
+/**
+ * @author cyx
+ */
 @Component
-@NoArgsConstructor
-public class B {
+public class C {
     @Autowired
     private A a;
 
@@ -17,5 +18,4 @@ public class B {
     public void setA(A a) {
         this.a = a;
     }
-
 }

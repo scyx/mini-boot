@@ -23,26 +23,11 @@ public class CglibProxy extends BeanPostProcesser implements ProxyInterface, Met
     public Object wrapBean(Object object, Interceptor interceptor) {
         Class<?> rootClass = object.getClass();
         Class<?> proxySuperClass = rootClass;
-//        // cglib 多级代理处理
-//        if (object.getClass().getName().contains("$$")) {
-//            proxySuperClass = rootClass.getSuperclass();
-//        }
         Enhancer enhancer = new Enhancer();
         enhancer.setClassLoader(object.getClass().getClassLoader());
         enhancer.setSuperclass(proxySuperClass);
         enhancer.setCallback(new CglibProxy(object,interceptor));
         return enhancer.create();
-//        Class<?> rootClass = object.getClass();
-//        Class<?> proxySuperClass = rootClass;
-//        // cglib 多级代理处理
-//        if (object.getClass().getName().contains("$$")) {
-//            proxySuperClass = rootClass.getSuperclass();
-//        }
-//        Enhancer enhancer = new Enhancer();
-//        enhancer.setClassLoader(object.getClass().getClassLoader());
-//        enhancer.setSuperclass(proxySuperClass);
-//        enhancer.setCallback(new CglibProxy(object, interceptor));
-//        return enhancer.create();
     }
 
     @Override
